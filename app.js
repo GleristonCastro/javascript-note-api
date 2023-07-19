@@ -2,7 +2,7 @@ var express = require('express');
 var path = require('path');
 var logger = require('morgan');
 
-var usersRouter = require('./routes/users');
+var usersRouter = require('./app/routes/users');
 
 var app = express();
 
