@@ -13,7 +13,7 @@ router.post('/', withAuth, async function (req, res) {
     res.json(note);
   } catch (error) {
     res.status(401).send(err);
-  }
+  };
 });
 
 router.get('/:id', withAuth, async function (req, res) {
@@ -26,7 +26,16 @@ router.get('/:id', withAuth, async function (req, res) {
       res.status(403).json({ error: 'Permission denied' });
   } catch (error) {
     res.status(500).json({ error: 'Problem to get a note' })
-  }
+  };
+});
+
+router.get('/', withAuth, async function (req, res) {
+  try {
+    let notes = await Note.find({ author: req.user._id })
+    res.json(notes);
+  } catch (error) {
+    res.json({ error: error }).status(500)
+  };
 });
 
 const is_owner = (user, note) => {
@@ -34,6 +43,6 @@ const is_owner = (user, note) => {
     return true;
   else
     return false;
-}
+};
 
 module.exports = router;
