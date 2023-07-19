@@ -5,14 +5,24 @@ const withAuth = require('../middlewares/auth');
 
 router.post('/', withAuth, async function (req, res) {
   const { title, body } = req.body;
-
   try {
-
     let note = new Note({ title: title, body: body, author: req.user._id });
     await note.save();
-    res.json(note);
+    res.status(200).json(note);
   } catch (error) {
-    res.status(401).send(err);
+    res.status(500).json({ error: 'Problem to create a new note' })
+  };
+});
+
+router.get('/search', withAuth, async function (req, res) {
+  const { query } = req.query;
+  try {
+    let notes = await Note
+      .find({ author: req.user._id })
+      .find({ $text: { $search: query } });
+      res.json(notes);
+  } catch (error) {
+    res.json({ error: error }).status(500);
   };
 });
 
